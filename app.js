@@ -10,7 +10,6 @@ const parseurl = require('parseurl')
 const app = express();
 // Instantiate letterList array.
 const letterList = [];
-const viewsList = [];
 // Configure dependencies.
 app.engine('mustache', mustacheExpress());
 app.set('views', './views');
