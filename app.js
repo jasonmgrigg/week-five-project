@@ -1,51 +1,89 @@
-// String length, work out something to randomly select word and then define
-// the length.
-// Use that to determine how many search boxes(letter boxes) to put up
-// var str = "Hello World!";
-// var n = str.length;
-// console.log(n)
-
-
+// Require dependencies.
 const express = require('express');
-const path = require('path');
-const list = require('./data.js');
-const clist = require('./completedList.js');
+const bodyParser = require('body-parser');
+const expressValidator = require('express-validator');
 const mustacheExpress = require('mustache-express');
-var bodyParser = require('body-parser');
+const session = require('express-session')
+const parseurl = require('parseurl')
+
+// Create app.
 const app = express();
-
+// Instantiate letterList array.
+const letterList = [];
+const viewsList = [];
+// Configure dependencies.
 app.engine('mustache', mustacheExpress());
-app.set('views', './views')
-app.set('view engine', 'mustache')
+app.set('views', './views');
+app.set('view engine', 'mustache');
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(expressValidator());
+app.use(express.static('./public'));
+app.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: true
+}))
+app.use(function (req, res, next) {
+  var views = req.session.views
 
-function pushToArray(string, num){
-  let tempTask = {'item': string,
-"id":''+num};
-  return tempTask;
-}
+  if (!views) {
+    views = req.session.views = {}
+  }
 
-function onClick() {
 
-}
+  // get the url pathname
+    var pathname = parseurl(req).pathname
 
-app.get('/todo/', function (req, res) {
+    // count the views
+    views[pathname] = (views[pathname] || 0) + 1
 
-  res.render('todo', {todoList: list.todoList,
-  completedList: clist.completedList})
+    next()
+    console.log(views)
+  })
+
+  app.get('/', function (req, res, next) {
+    // res.send('you viewed this page ' + req.session.views['/'] + ' times')
+    // res.render('index', {views: views});
+//   })
+//
+//   app.get('/bar', function (req, res, next) {
+//     res.send('you viewed this page ' + req.session.views['/bar'] + ' times')
+//   })
+//
+// // Add route to render the To Do list on the index page.
+// app.get('/', function(req, res){
+  res.render('index', {letterList});
 });
 
+// Receives data from form (action='/')
+// 'req.body' now contains form data.
 app.post('/', function(req, res){
-  let num = list.todoList.length;
-  let nextTask = pushToArray(req.body.todo, num);
-  list.todoList.push(nextTask);
+// Check for validation errors and create error message.
+  req.checkBody('item', 'Please enter something to do.' ).notEmpty();
 
-
-  res.redirect('/todo');
-
+  let errors = req.validationErrors();
+  if (errors) {
+// Render validation error messages.
+    res.render('index', {errors: errors});
+  } else {
+// Add new letter to the letter list.
+      let letter = {
+        'item': req.body.item,
+        // 'priority': req.body.priority,
+        // 'checked': ""
+      }
+      // let views = {
+      //   'view': req.body.views
+      // }
+      letterList.push(letter);
+      // viewsList.push(views);
+      console.log(letterList);
+// Render index page with updated To Do list.
+      res.render('index', {letterList});
+    }
   });
-
+// Local web server to run the app.
 app.listen(3000, function(){
   console.log('Started express application!')
 });
