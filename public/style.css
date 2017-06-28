@@ -1,0 +1,70 @@
+
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+  background: transparent;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+#wrapper {
+    margin: 0 auto;
+    /*width: 532px;*/
+    width: 50vw;
+    text-align: center;
+    background-color: white;
+}
+
+h1 {
+  font-size: 2em;
+  align-items: center;
+}
+
+input {
+  border: 1px solid black;
+  padding: 10px;
+}
+
+input[type=submit] {
+  padding: 10px;
+  width: 150px;
+  color: white;
+  background-color: blue;
+}
+
+#letter-wrapper {
+  display: flex;
+  flex-flow: row, nowrap;
+  padding: 10px;
+}
+
+.letters {
+  border: 1px solid;
+  margin: 5px;
+  width: 50px;
+  height: 50px;
+  font-size: 3em;
+  background-color: white;
+}
+
+#guess-left,
+#guesses,
+#message {
+  font-size: 1em;
+}
+
+#guess-left {
+  font-size: 1em;
+  margin-left: 80vw;
+  background-color: green;
+}
