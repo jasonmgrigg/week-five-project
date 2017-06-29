@@ -79,7 +79,7 @@ app.use(function (req, res, next) {  //setting route
   // console.log(wordChance);  //shows the below variables and how they are defined in the beginning of the game.
   if (!wordChance) {
     wordChance = req.session.wordChance = {};  //empty array
-    wordChance.guessesLeft = 1;  //chances left to guess a letter
+    wordChance.guessesLeft = 8;  //chances left to guess a letter
     wordChance.lettersGuessed = [];  //this is an empty array since nothing has been guessed at this point.
     wordChance.btnText = 'Play Game';  //text that is dislayed in the button
     wordChance.status = '';  //game status display, which is nothing at this time
@@ -137,7 +137,7 @@ app.post('/', function(req, res) {
     // starts game back over
     wordChance.word = getWord(wordChance.mode);
     wordChance.lose = false;
-    wordChance.guessesLeft = 1;
+    wordChance.guessesLeft = 8;
     wordChance.lettersGuessed = [];
     wordChance.btnText = 'Play Game';  //resets Button to display Play Game after reset
   }
