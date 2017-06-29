@@ -57,14 +57,6 @@ input[type=submit] {
   background-color: white;
 }
 
-#guess-left,
-#guesses,
-#message {
-  font-size: 1em;
-}
-
 #guess-left {
   font-size: 1em;
-  margin-left: 80vw;
-  background-color: green;
 }
