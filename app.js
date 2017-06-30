@@ -1,17 +1,3 @@
-//Change guesses back to 8 from 1 before submission
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 const express = require('express');
 const expressValidator = require('express-validator');
@@ -79,10 +65,10 @@ app.use(function (req, res, next) {  //setting route
   // console.log(wordChance);  //shows the below variables and how they are defined in the beginning of the game.
   if (!wordChance) {
     wordChance = req.session.wordChance = {};  //empty array
-    wordChance.guessesLeft = 8;  //chances left to guess a letter
+    wordChance.guessesLeft = 8;  //chances left to guess a letter, gives a starting point
     wordChance.lettersGuessed = [];  //this is an empty array since nothing has been guessed at this point.
     wordChance.btnText = 'Play Game';  //text that is dislayed in the button
-    wordChance.status = '';  //game status display, which is nothing at this time
+    wordChance.status = '';  //game status display, which is nothing at this time, start with an empty string to update later
     wordChance.lose = false;  //boolean to see if game has been lost to trigger another action
     wordChance.playing = false;
     wordChance.display = ''; //displays an empty string to start
@@ -96,11 +82,15 @@ app.get('/', function(req, res) {
   }
   res.render('index', { wordChance: req.session.wordChance }); //renders the index.mustache file to begin, passes in wordChance function
 });
+//the above app.get is what renders the first index.mustache file to display my initial page with the random word selected
+
+
+//the below app.post is what I think of as the back end "behind the scenes" work to make the game work.
 app.post('/', function(req, res) {
-  var wordChance = req.session.wordChance;
+  var wordChance = req.session.wordChance;  //pases the word that is randomly generated into the session.
   if (wordChance.playing) {
-    req.checkBody("guessLetter", "You must enter a letter!").notEmpty();  //checks for alpha character, if not returns error.
-    var errors = req.validationErrors();
+    req.checkBody("guessLetter", "You must enter a letter!").notEmpty();  //checks for character, if not returns error.
+    var errors = req.validationErrors();  //uses validation errors in the session to determine next plan of attack.
     if (errors) {
       wordChance.message = errors[0].msg;
     } else {
@@ -114,7 +104,8 @@ app.post('/', function(req, res) {
           wordChance.lettersGuessed.push(req.body.guessLetter.toUpperCase());  // pushes capital letter into the lettersGuessed array
           if (wordChance.guessesLeft == 0) {  //checks to see if you have any guesses left, if they are equal to 0 then the game ends
             wordChance.status = 'You lose!'; //status changes to you lose, cannot guess any more letters
-            wordChance.display = req.session.wordChance.word;
+            wordChance.display = req.session.wordChance.word;  //displays word that is held in the session in the display.
+            // wordChance.display.push(req.session.wordChance.word);  //this sort of worked, but it displays the word after the selection boxes
             wordChance.playing = false;
             wordChance.lose = true;
             // console.log(req.session.wordChance.word);
